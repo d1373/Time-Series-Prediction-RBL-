@@ -80,7 +80,7 @@ def is_holiday(date_str, holidays):
 # Function to generate fill status for a day, with integer fill values
 def generate_fill_status():
     fill_status = []
-    current_fill = random.randint(0, 2)  # Start with some waste in the bin (0 to 2)
+    current_fill = random.randint(1, 2)  # Start with some waste in the bin (0 to 2)
     for _ in range(12):  # 12 hours from 8 AM to 8 PM
         increment = random.randint(1, 3)  # Waste fills incrementally (1 to 3 units at a time)
         current_fill = min(current_fill + increment, 10)  # Ensure it stays between 0 and 10
@@ -104,6 +104,14 @@ def apply_holiday_multiplier(date, location, fill_status):
     return [min(int(f * multiplier), 10) for f in fill_status]
 
 # Main function to generate synthetic data
+# Updated logic for resetting fill levels after emptying
+def apply_emptying_logic(fill_status, empty_index):
+    for i in range(empty_index, len(fill_status)):
+        # Gradually reduce fill level after emptying instead of setting to zero
+        fill_status[i] = max(fill_status[i] - random.randint(1, 3), 0)
+    return fill_status
+
+# Main function to generate synthetic data with improved emptying logic
 def generate_waste_data(start_date, end_date):
     data = []
     current_date = start_date
@@ -120,14 +128,15 @@ def generate_waste_data(start_date, end_date):
             # Apply holiday multiplier if applicable
             fill_status = apply_holiday_multiplier(current_date, bin_info["location"], fill_status)
 
-            # Randomly decide the time of emptying
-            empty_hour, empty_minute = get_emptying_time()
-            empty_index = empty_hour - 8  # Map to 8 AM - 8 PM range
+            # Randomly decide the time of emptying for only 80% of bins each day
+            if random.random() < 0.8:  # 80% chance that a bin will be emptied
+                empty_hour, empty_minute = get_emptying_time()
+                empty_index = empty_hour - 8  # Map to 8 AM - 8 PM range
+                fill_status = apply_emptying_logic(fill_status, empty_index)
 
             # Simulate 12-hour recording of fill status
             for hour in range(12):
                 hour_time = (8 + hour) % 24  # Starting from 8 AM
-                fill_capacity = fill_status[hour] if hour < empty_index else 0  # Reset after emptying
                 time_str = f'{hour_time}:00'
 
                 # Append data
@@ -135,7 +144,7 @@ def generate_waste_data(start_date, end_date):
                     "entry_ID": entry_id,  # Add entry_ID to track entries
                     "dustbin_id": bin_info["id"],
                     "location": bin_info["location"],
-                    "filled_capacity": fill_capacity,
+                    "filled_capacity": fill_status[hour],
                     "date": date_str,
                     "time": time_str,
                     "day_of_week": day_of_week
@@ -148,6 +157,7 @@ def generate_waste_data(start_date, end_date):
         current_date += datetime.timedelta(days=1)
 
     return data
+
 
 # Define date range (1st July 2023 to 18th September 2024)
 start_date = datetime.date(2023, 7, 1)
