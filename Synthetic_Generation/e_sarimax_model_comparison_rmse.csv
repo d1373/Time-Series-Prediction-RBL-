@@ -1,0 +1,7 @@
+Dustbin ID,E-SARIMAX RMSE,Best Params
+2,1.3791207736549236,"{'order': (1, 1, 1), 'seasonal_order': (1, 1, 1, 24)}"
+4,1.4488880084407196,"{'order': (1, 1, 1), 'seasonal_order': (1, 1, 1, 24)}"
+1,1.1582567902101588,"{'order': (1, 1, 1), 'seasonal_order': (1, 1, 1, 24)}"
+3,1.4270669868968304,"{'order': (1, 1, 1), 'seasonal_order': (1, 1, 1, 24)}"
+5,1.280709469701246,"{'order': (1, 1, 1), 'seasonal_order': (1, 1, 1, 24)}"
+6,1.3581729490747092,"{'order': (1, 1, 1), 'seasonal_order': (1, 1, 1, 24)}"

@@ -1,0 +1,5 @@
+Category,Best ARIMA Config,RMSE
+Overall Data,"ARIMA(1, 2, 0)",1.3903842984149135
+Low-Fullness Data,"ARIMA(0, 0, 0)",1.0
+Medium-Fullness Data,"ARIMA(2, 1, 2)",0.8335963569102406
+Bell-Shaped Fullness Data,"ARIMA(2, 2, 2)",1.5640755980953394
